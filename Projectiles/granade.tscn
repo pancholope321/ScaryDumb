@@ -1,0 +1,41 @@
+[gd_scene load_steps=6 format=3 uid="uid://gfpm26f8etbt"]
+
+[ext_resource type="Script" path="res://Scripts/Projectiles/granade.gd" id="1_rwils"]
+[ext_resource type="PackedScene" uid="uid://bnoougge50drk" path="res://Projectiles/bullet.tscn" id="2_2xx52"]
+[ext_resource type="Texture2D" uid="uid://blibd70s3g4xc" path="res://Sprites/Guns/granade.png" id="3_gkp14"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hq8we"]
+size = Vector2(4, 2)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kiyp3"]
+size = Vector2(4, 2)
+
+[node name="Granade" type="CharacterBody2D"]
+collision_layer = 0
+collision_mask = 0
+script = ExtResource("1_rwils")
+bullet = ExtResource("2_2xx52")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(2, 0)
+shape = SubResource("RectangleShape2D_hq8we")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+offset_top = -2.0
+offset_right = 4.0
+offset_bottom = 1.0
+texture = ExtResource("3_gkp14")
+stretch_mode = 2
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(2, 0)
+shape = SubResource("RectangleShape2D_kiyp3")
+
+[node name="Timer" type="Timer" parent="."]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

@@ -1,0 +1,82 @@
+[gd_scene load_steps=7 format=3 uid="uid://7cfticq2qxhg"]
+
+[ext_resource type="Script" path="res://Scripts/Projectiles/bullet.gd" id="1_71d1m"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hq8we"]
+size = Vector2(2, 6)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kiyp3"]
+size = Vector2(2, 6)
+
+[sub_resource type="Animation" id="Animation_abade"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRect:size")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(2, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_pelnf"]
+resource_name = "slicing"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRect:size")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(2, 0), Vector2(2, 6)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_bnh40"]
+_data = {
+"RESET": SubResource("Animation_abade"),
+"slicing": SubResource("Animation_pelnf")
+}
+
+[node name="slice" type="CharacterBody2D"]
+collision_layer = 0
+collision_mask = 0
+script = ExtResource("1_71d1m")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(1, 0)
+shape = SubResource("RectangleShape2D_hq8we")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 2.0
+offset_top = 3.0
+offset_right = 4.0
+offset_bottom = 3.0
+grow_vertical = 2
+rotation = 3.14159
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(1, 0)
+shape = SubResource("RectangleShape2D_kiyp3")
+
+[node name="Timer" type="Timer" parent="."]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_bnh40")
+}
+autoplay = "slicing"
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

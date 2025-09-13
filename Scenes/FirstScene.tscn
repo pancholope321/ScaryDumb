@@ -1,0 +1,52 @@
+[gd_scene load_steps=5 format=3 uid="uid://btj0dlrkfwt1o"]
+
+[ext_resource type="Script" uid="uid://bm866twvyrobq" path="res://Scripts/Player/player.gd" id="1_cfvru"]
+[ext_resource type="PackedScene" uid="uid://7r6ples4ifbw" path="res://Particles/blood_splatter.tscn" id="2_didxl"]
+[ext_resource type="PackedScene" path="res://Enemies/knifegunner.tscn" id="3_2lvdd"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wfw3p"]
+size = Vector2(68, 74)
+
+[node name="Node2D" type="Node2D"]
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="." groups=["Player"]]
+position = Vector2(235, 282)
+script = ExtResource("1_cfvru")
+bloodSplatter = ExtResource("2_didxl")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
+shape = SubResource("RectangleShape2D_wfw3p")
+
+[node name="Control" type="Control" parent="CharacterBody2D"]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -34.0
+offset_top = -37.0
+offset_right = 34.0
+offset_bottom = 37.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="CharacterBody2D/Control"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -5.0
+offset_top = -11.5
+offset_right = 5.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 96
+text = "P"
+
+[node name="knife" parent="." instance=ExtResource("3_2lvdd")]
+position = Vector2(163, 291)

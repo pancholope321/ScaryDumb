@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3 uid="uid://cdmj75rhyi5d4"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_sckt6"]
+particle_flag_disable_z = true
+initial_velocity_min = 37.63
+initial_velocity_max = 86.02
+gravity = Vector3(0, 0, 0)
+color = Color(1, 0.141176, 0.0588235, 1)
+
+[node name="GPUParticles2D" type="GPUParticles2D"]
+emitting = false
+amount = 10
+process_material = SubResource("ParticleProcessMaterial_sckt6")
+lifetime = 0.25
+one_shot = true
+explosiveness = 1.0

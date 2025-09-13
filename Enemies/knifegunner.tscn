@@ -1,0 +1,149 @@
+[gd_scene load_steps=15 format=3 uid="uid://b0l5aj3uvtfs1"]
+
+[ext_resource type="Script" path="res://Scripts/Enemies/enemycontroller.gd" id="1_f8hqj"]
+[ext_resource type="PackedScene" uid="uid://cdmj75rhyi5d4" path="res://Particles/blood_splatter.tscn" id="2_x2tqs"]
+[ext_resource type="PackedScene" uid="uid://cwapfrsvxg170" path="res://Rewards/coin.tscn" id="3_850nm"]
+[ext_resource type="Texture2D" uid="uid://fyycp8ruor0" path="res://Sprites/Characters/knife.png" id="4_erby0"]
+[ext_resource type="AudioStream" uid="uid://nololw0xwixg" path="res://Sounds/damage.wav" id="5_8r28p"]
+[ext_resource type="Script" path="res://Scripts/Enemies/gun.gd" id="6_a7krn"]
+[ext_resource type="PackedScene" uid="uid://7cfticq2qxhg" path="res://Projectiles/slice.tscn" id="7_e0k56"]
+[ext_resource type="Texture2D" uid="uid://cfqb4lgfkovhx" path="res://Sprites/Guns/knife.png" id="8_6cdum"]
+[ext_resource type="AudioStream" uid="uid://c58vb0bo6shxj" path="res://Sounds/slice.wav" id="9_8vxvt"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_74bm3"]
+size = Vector2(9, 20)
+
+[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_wde0d"]
+points = PackedVector2Array(0, 0, 32, 64, -32, 64)
+
+[sub_resource type="Animation" id="Animation_8y0l7"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("gun/Gun:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(12, -8.9407e-07)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("gun/Gun:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_wt3ma"]
+resource_name = "shot"
+length = 0.05
+step = 0.025
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("gun/Gun:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.025, 0.05),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(12, -8.9407e-07), Vector2(12, -1), Vector2(12, -8.9407e-07)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("gun/Gun:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.025, 0.05),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.0, -0.0610865, 0.0]
+}
+tracks/2/type = "method"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("gun/shot")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [0.0],
+"method": &"play"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_x77wt"]
+_data = {
+"RESET": SubResource("Animation_8y0l7"),
+"shot": SubResource("Animation_wt3ma")
+}
+
+[node name="knife" type="CharacterBody2D" groups=["Enemy"]]
+position = Vector2(364, 79)
+script = ExtResource("1_f8hqj")
+life = 50
+idling_distance = 300
+SPEED = 100
+LOOKINGSPEED = 50
+WALKINGSPEED = 20
+looking_distance = 200
+bloodSplatter = ExtResource("2_x2tqs")
+goldCoin = ExtResource("3_850nm")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_74bm3")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("4_erby0")
+
+[node name="CheckPlayer" type="ShapeCast2D" parent="."]
+rotation = -1.5708
+shape = SubResource("ConvexPolygonShape2D_wde0d")
+target_position = Vector2(0, 0)
+
+[node name="damage" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("5_8r28p")
+
+[node name="gun" type="Node2D" parent="."]
+script = ExtResource("6_a7krn")
+gun_damage = 10
+min_cooldown = 0.25
+first_shot_cooldown = 0.25
+gunLenght = 15
+bullet = ExtResource("7_e0k56")
+bulletVelocity = 30.0
+
+[node name="Gun" type="Sprite2D" parent="gun"]
+position = Vector2(12, -8.9407e-07)
+texture = ExtResource("8_6cdum")
+
+[node name="RayCast2D" type="RayCast2D" parent="gun"]
+target_position = Vector2(100, 0)
+
+[node name="gun_cooldown" type="Timer" parent="gun"]
+
+[node name="gunAnimation" type="AnimationPlayer" parent="gun"]
+root_node = NodePath("../..")
+libraries = {
+"": SubResource("AnimationLibrary_x77wt")
+}
+
+[node name="shot" type="AudioStreamPlayer2D" parent="gun"]
+stream = ExtResource("9_8vxvt")
+volume_db = -15.995
+
+[connection signal="timeout" from="gun/gun_cooldown" to="gun" method="_on_gun_cooldown_timeout"]

@@ -1,0 +1,64 @@
+[gd_scene load_steps=7 format=3 uid="uid://cwapfrsvxg170"]
+
+[ext_resource type="Script" path="res://Scripts/Enemies/coin.gd" id="1_6ffy8"]
+[ext_resource type="Texture2D" uid="uid://dgdxqqyyb46a2" path="res://Sprites/Misc/coin.png" id="2_txukq"]
+[ext_resource type="AudioStream" uid="uid://b4hq16oinro3i" path="res://Sounds/recolect.wav" id="3_8itm5"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bqv05"]
+size = Vector2(4, 3)
+
+[sub_resource type="Animation" id="Animation_4m1qu"]
+resource_name = "get_coin"
+length = 0.3
+tracks/0/type = "audio"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("coin")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"clips": [{
+"end_offset": 0.215491,
+"start_offset": 0.0,
+"stream": ExtResource("3_8itm5")
+}],
+"times": PackedFloat32Array(0)
+}
+tracks/0/use_blend = true
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.3),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"queue_free"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_bry6e"]
+_data = {
+"get_coin": SubResource("Animation_4m1qu")
+}
+
+[node name="Coin" type="Area2D"]
+script = ExtResource("1_6ffy8")
+
+[node name="Collect" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_bqv05")
+
+[node name="coinSprite" type="Sprite2D" parent="."]
+texture = ExtResource("2_txukq")
+
+[node name="animation" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_bry6e")
+}
+
+[node name="coin" type="AudioStreamPlayer" parent="."]
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
